@@ -1,0 +1,55 @@
+#include <iostream>
+
+#include "sycl/sycl.hpp"
+
+constexpr size_t gigabyte{1024 * 1024 * 1024};
+
+int main() {
+  auto platforms = sycl::platform::get_platforms();
+  int platform_id = 0;
+
+  for (auto p : platforms) {
+    std::string platform_name = p.get_info<sycl::info::platform::name>();
+    std::cout << "Platform " << platform_id << ": " << platform_name << "\n";
+
+    auto devices = p.get_devices();
+    int device_id = 0;
+    for (auto d : devices) {
+      std::string device_name = d.get_info<sycl::info::device::name>();
+      std::cout << "Device " << device_id << ": " << device_name << "\n";
+
+      sycl::info::device_type device_type =
+          d.get_info<sycl::info::device::device_type>();
+      std::cout << "Type: ";
+      switch (device_type) {
+        case sycl::info::device_type::cpu:
+          std::cout << "CPU\n";
+          break;
+        case sycl::info::device_type::gpu:
+          std::cout << "GPU\n";
+          break;
+        case sycl::info::device_type::accelerator:
+          std::cout << "accelerator\n";
+          break;
+        case sycl::info::device_type::host:
+          std::cout << "host\n";
+          break;
+        default:
+          std::cout << "???\n";
+      }
+
+      size_t memory = d.get_info<sycl::info::device::global_mem_size>();
+      std::cout << "Memory: " << (memory / gigabyte) << " GB\n";
+
+      uint64_t max_wg_size =
+          d.get_info<sycl::info::device::max_work_group_size>();
+      std::cout << "Max Work Group Size: " << max_wg_size << "\n";
+
+      ++device_id;
+    }
+    ++platform_id;
+    std::cout << "\n";
+  }
+
+  return 0;
+}

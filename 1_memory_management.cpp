@@ -25,21 +25,21 @@ int main() {
   sycl::device sycl_device{sycl::default_selector()};
   sycl::context sycl_context{sycl_device};
 
-  // Allocate 1 MB of device memory accessible, not accesible by the hose
+  // Allocate 1 MB of device memory accessible, not accessible by the hose
   const size_t double_count = megabyte / sizeof(double);
   double* x =
       sycl::malloc_device<double>(double_count, sycl_device, sycl_context);
 
-  // Allocate 1 MB of (page-locked) host memory accesible by the device
+  // Allocate 1 MB of (page-locked) host memory accessible by the device
   constexpr size_t int_count = megabyte / sizeof(int);
   int* i = sycl::malloc_host<int>(int_count, sycl_context);
 
-  // Allocate 1 MB of shared memory accible by both the host and the device
+  // Allocate 1 MB of shared memory accessible by both the host and the device
   constexpr size_t float_count = megabyte / sizeof(float);
   float* y = sycl::malloc_shared<float>(float_count, sycl_device, sycl_context);
 
   // Check that the pointer belongs to the correct device.
-  // No needed here, but useful for libraries or complex applications.
+  // Not needed here, but useful for libraries or complex applications.
   assert(sycl::get_pointer_device(x, sycl_context) == sycl_device);
   assert(sycl::get_pointer_device(i, sycl_context) == sycl_device);
   assert(sycl::get_pointer_device(y, sycl_context) == sycl_device);

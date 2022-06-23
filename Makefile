@@ -1,9 +1,8 @@
-CXX := clang++
-CXXFLAGS := -O2 -fsycl
-SYCL_ROOT := $(CMPROOT)/linux
+CXX ?= clang++
+CXXFLAGS ?= -O2 -fsycl
 
 %.exe: %.cpp
-	$(CXX) $(CXXFLAGS) -I$(SYCL_ROOT)/include $< -o $(@) -L$(SYCL_ROOT)/lib -lsycl 
+	$(CXX) $(CXXFLAGS) $< -o $(@) 
 
 default: all
 

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "sycl/sycl.hpp"
+#include "CL/sycl.hpp"
 
 constexpr size_t gigabyte{1024 * 1024 * 1024};
 

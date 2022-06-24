@@ -2,7 +2,7 @@
 
 #include "CL/sycl.hpp"
 
-constexpr size_t megabyte{1024 * 1024};
+constexpr std::size_t megabyte{1024 * 1024};
 
 void printAllocType(void* ptr, const sycl::context& sycl_context) {
   sycl::usm::alloc usm_alloc = sycl::get_pointer_type(ptr, sycl_context);
@@ -26,16 +26,16 @@ int main() {
   sycl::context sycl_context{sycl_device};
 
   // Allocate 1 MB of device memory accessible, not accessible by the hose
-  const size_t double_count = megabyte / sizeof(double);
+  const std::size_t double_count = megabyte / sizeof(double);
   double* x =
       sycl::malloc_device<double>(double_count, sycl_device, sycl_context);
 
   // Allocate 1 MB of (page-locked) host memory accessible by the device
-  constexpr size_t int_count = megabyte / sizeof(int);
+  constexpr std::size_t int_count = megabyte / sizeof(int);
   int* i = sycl::malloc_host<int>(int_count, sycl_context);
 
   // Allocate 1 MB of shared memory accessible by both the host and the device
-  constexpr size_t float_count = megabyte / sizeof(float);
+  constexpr std::size_t float_count = megabyte / sizeof(float);
   float* y = sycl::malloc_shared<float>(float_count, sycl_device, sycl_context);
 
   // Check that the pointer belongs to the correct device.

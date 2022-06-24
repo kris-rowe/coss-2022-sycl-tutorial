@@ -5,6 +5,20 @@
 
 #include "CL/sycl.hpp"
 
+// Check for (near) equality between two floating-point arrays
+// Note: please be more rigorous than this in production code!
+bool nearlyEqual(const std::vector<double>& lhs,const std::vector<double>& rhs) {
+  for (std::size_t i{}; i < lhs.size(); ++i) {
+    const double& expected = lhs[i];
+    const double& actual = rhs[i];
+    if (std::abs(expected - actual) >
+        std::numeric_limits<double>::epsilon() * std::abs(expected + actual)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 int main() {
   const std::size_t vector_length = 100;
   std::vector<double> host_original(vector_length);
@@ -37,18 +51,10 @@ int main() {
   sycl_queue.copy(device_vector, host_copy.data(), vector_length);
   sycl_queue.wait();
 
-  // Check for (near) equality with the original values
-  for (std::size_t i{}; i < vector_length; ++i) {
-    double expected = host_original[i];
-    double actual = host_copy[i];
-    if (std::abs(expected - actual) >
-        std::numeric_limits<double>::epsilon() * std::abs(expected + actual)) {
-      std::cout << "Verification failed!\n"
-                << "i: " << i << " expected: " << expected
-                << " actual: " << actual << "\n";
-      return EXIT_FAILURE;
-    }
-  }
+  if(!nearlyEqual(host_original,host_copy)) {
+    std::cout << "Verification failed!\n";
+    return EXIT_FAILURE;
+  }  
 
   std::cout << "Success!\n";
 

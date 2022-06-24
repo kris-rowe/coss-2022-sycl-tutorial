@@ -9,13 +9,14 @@ default: all
 0_device_info:
 1_memory_management:
 
-all: 0_device_info 1_memory_management 2_queues 3_kernels
+all: 0_device_info 1_memory_management 2_queues 3_kernels 4_events
 
 clean:
 	-rm -f 0_device_info
 	-rm -f 1_memory_management
 	-rm -f 2_queues
 	-rm -f 3_kernels
+	-rm -f 4_events
 
 print-info:
 	@echo "CXX: $(CXX)"

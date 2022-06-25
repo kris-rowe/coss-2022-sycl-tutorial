@@ -1,8 +1,8 @@
 CXX ?= clang++
-CXXFLAGS ?= -O2 -fsycl
+CXXFLAGS ?= -O2 -fsycl -fsycl-targets=nvptx64-nvidia-cuda
 
-%.exe: %.cpp
-	$(CXX) $(CXXFLAGS) $< -o $(@) 
+%: %.cpp
+	$(CXX) $(CXXFLAGS) $< -o $(@)
 
 default: all
 

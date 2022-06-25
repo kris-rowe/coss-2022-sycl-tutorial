@@ -1,4 +1,6 @@
-CXX ?= clang++
+ifeq ($(CXX),g++)
+	CXX:= clang++
+endif
 CXXFLAGS ?= -O2 -fsycl -fsycl-targets=nvptx64-nvidia-cuda
 
 %: %.cpp

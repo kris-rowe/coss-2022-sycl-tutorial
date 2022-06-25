@@ -9,14 +9,26 @@ This repository contains notes and source code for the SYCL Tutorial presented v
 ### Requirements
 
 - GNU Make
-- 
+- SYCL 2020 compiler and libraries
+
+> If a SYCL 2020 compiler is not installed on your current system, one can be built from [Intel's LLVM fork on GitHub](https://github.com/intel/llvm). Instructions for building and setting up the Intel LLVM compiler can be found [here](https://intel.github.io/llvm-docs/).
 
 ### Build
 
-### Building on Graham
+The [examples](examples/) and [exercises](examples/) directories contain makefiles to build their corresponding codes. By default, it is assumed that the LLVM clang compiler will be used with the CUDA plugin. 
+
+Each example is contained in a single .cpp file, for which the makefile will generate an executable with the same name. Examples can be built individually, or all at once by calling 
+```shell
+$ make -j all
+```
 
 ### Run
 
+Example programs do not take commandline arguments and can be run by calling
+```shell
+$ ./example-name
+```
+For any additional instructions on running the exercise codes, see their corresponding README.
 
 ## Community
 
@@ -30,6 +42,17 @@ To provide feedback, participate in the [polls](https://github.com/kris-rowe/cos
 
 ### Contributing
 
+#### Bugs & Corrections
+
+Found a bug, spelling mistake, or other error? Open an [issue](https://github.com/kris-rowe/coss-2022-sycl-tutorial/issues) and be sure to tag it with the corresponding category.
+
+#### Sharing Your Work
+
+Have an interesting solution to one of the exercises or other code related to the tutorial that you would like to share? Create a post in the [Show and tell](https://github.com/kris-rowe/coss-2022-sycl-tutorial/discussions/categories/show-and-tell) discussions category.
+
+#### Develoment
+
+If you are interested in helping to further develop this tutorial please reach out to [Kris Rowe](mailto:kris.rowe@anl.gov).
 
 ### Code of Conduct
 

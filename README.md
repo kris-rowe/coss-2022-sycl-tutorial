@@ -15,7 +15,7 @@ This repository contains notes and source code for the SYCL Tutorial presented v
 
 ### Build
 
-The [examples](examples/) and [exercises](examples/) directories contain makefiles to build their corresponding codes. By default, it is assumed that the LLVM clang compiler will be used with the CUDA plugin. 
+The [examples](examples/) and [exercises](exercises/) directories contain makefiles to build their corresponding codes. By default, it is assumed that the LLVM clang compiler will be used with the CUDA plugin. 
 
 Each example is contained in a single .cpp file, for which the makefile will generate an executable with the same name. Examples can be built individually, or all at once by calling 
 ```shell

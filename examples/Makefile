@@ -9,15 +9,15 @@ CXXFLAGS ?= -O2 -fsycl -fsycl-targets=nvptx64-nvidia-cuda
 default: all
 
 examples = \
-0_device_info \
-1_memory_management \
-2_queues	\
-3_kernels	\
-4_events \
-5_ranges	\
-6_reductions \
-7_local_memory	\
-9_error_handling 
+00_device_info \
+01_memory_management \
+02_queues	\
+03_kernels	\
+04_events \
+05_ranges	\
+06_local_memory	\
+07_reductions \
+09_error_handling 
 
 $(examples): ;
 

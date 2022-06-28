@@ -8,28 +8,23 @@ CXXFLAGS ?= -O2 -fsycl -fsycl-targets=nvptx64-nvidia-cuda
 
 default: all
 
-0_device_info:
-1_memory_management:
-2_queues:
-3_kernels:
-4_events:
-5_ranges:
-6_reductions:
-7_local_memory:
-9_error_handling:
+examples = \
+0_device_info \
+1_memory_management \
+2_queues	\
+3_kernels	\
+4_events \
+5_ranges	\
+6_reductions \
+7_local_memory	\
+9_error_handling 
 
-all: 0_device_info 1_memory_management 2_queues 3_kernels 4_events 5_ranges 6_reductions 7_local_memory 9_error_handling
+$(examples): ;
+
+all: $(examples)
 
 clean:
-	-rm -f 0_device_info
-	-rm -f 1_memory_management
-	-rm -f 2_queues
-	-rm -f 3_kernels
-	-rm -f 4_events
-	-rm -f 5_ranges
-	-rm -f 6_reductions
-	-rm -f 7_local_memory
-	-rm -f 9_error_handling
+	-rm -f $(examples)
 
 print-info:
 	@echo "CXX: $(CXX)"

@@ -13,10 +13,11 @@ examples = \
 02_queues \
 03_kernels \
 04_events \
-05_ranges	\
-06_local_memory	\
-07_reductions \
-09_device_functions \
+05_device_functions \
+06_ranges	\
+07_local_memory	\
+08_reductions \
+09_group_collectives \
 10_error_handling 
 
 all: $(examples)

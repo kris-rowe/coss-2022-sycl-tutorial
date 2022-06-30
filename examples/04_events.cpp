@@ -4,7 +4,7 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  const std::size_t vector_length = 2000;
+  const int vector_length = 2000;
   std::vector<double> a_host(vector_length);
   std::vector<double> b_host(vector_length, 1.0);
   std::vector<double> c_host(vector_length, 1.0);
@@ -60,5 +60,5 @@ int main() {
   sycl::free(a, sycl_context);
   sycl::free(b, sycl_context);
   sycl::free(c, sycl_context);
-  return 0;
+  return EXIT_SUCCESS;
 }

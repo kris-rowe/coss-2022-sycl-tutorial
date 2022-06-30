@@ -2,7 +2,7 @@
 
 #include "CL/sycl.hpp"
 
-constexpr size_t gigabyte{1024 * 1024 * 1024};
+constexpr int gigabyte{1024 * 1024 * 1024};
 
 void printDeviceType(sycl::device& sycl_device) {
   sycl::info::device_type device_type =
@@ -42,7 +42,7 @@ int main() {
 
       printDeviceType(d);
 
-      size_t memory = d.get_info<sycl::info::device::global_mem_size>();
+      int memory = d.get_info<sycl::info::device::global_mem_size>();
       std::cout << "Memory: " << (memory / gigabyte) << " GB\n";
 
       uint64_t max_wg_size =
@@ -55,5 +55,5 @@ int main() {
     std::cout << "\n";
   }
 
-  return 0;
+  return EXIT_SUCCESS;
 }

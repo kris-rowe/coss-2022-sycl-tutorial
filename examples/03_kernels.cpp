@@ -4,7 +4,7 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  const std::size_t vector_length = 2000;
+  const int vector_length = 2000;
   std::vector<double> a_host(vector_length);
   std::vector<double> b_host(vector_length, 1.0);
   std::vector<double> c_host(vector_length, 1.0);
@@ -16,9 +16,12 @@ int main() {
   sycl::queue sycl_queue{sycl_context, sycl_device};
 
   // Allocate vectors on the device
-  double* a = sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
-  double* b = sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
-  double* c = sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
+  double* a =
+      sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
+  double* b =
+      sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
+  double* c =
+      sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
 
   // Copy from the host to the device; synchronize.
   sycl_queue.copy(b_host.data(), b, b_host.size());
@@ -53,5 +56,5 @@ int main() {
   sycl::free(a, sycl_context);
   sycl::free(b, sycl_context);
   sycl::free(c, sycl_context);
-  return 0;
+  return EXIT_SUCCESS;
 }

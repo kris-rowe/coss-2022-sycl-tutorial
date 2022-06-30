@@ -3,9 +3,9 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  constexpr std::size_t M{256};
-  constexpr std::size_t N{128};
-  constexpr std::size_t K{64};
+  constexpr int M{256};
+  constexpr int N{128};
+  constexpr int K{64};
 
   // Linear arrays to store matrices
   std::vector<double> A_host(M * K, 1.0);
@@ -18,9 +18,12 @@ int main() {
   sycl::queue sycl_queue{sycl_context, sycl_device};
 
   // Allocate matrices on the device
-  double* A = sycl::malloc_device<double>(A_host.size(), sycl_device, sycl_context);
-  double* B = sycl::malloc_device<double>(B_host.size(), sycl_device, sycl_context);
-  double* C = sycl::malloc_device<double>(C_host.size(), sycl_device, sycl_context);
+  double* A =
+      sycl::malloc_device<double>(A_host.size(), sycl_device, sycl_context);
+  double* B =
+      sycl::malloc_device<double>(B_host.size(), sycl_device, sycl_context);
+  double* C =
+      sycl::malloc_device<double>(C_host.size(), sycl_device, sycl_context);
 
   // Copy from the host to the device
   sycl::event copy_a = sycl_queue.copy(A_host.data(), A, A_host.size());
@@ -54,7 +57,7 @@ int main() {
   sycl_queue.copy(C, C_host.data(), C_host.size(), {gemm_kernel}).wait();
 
   // Verify the results
-   // Verify the results.
+  // Verify the results.
   for (const auto& C_ij : C_host) {
     if (static_cast<double>(K) != C_ij) {
       std::cout << "Verification failed!\n";
@@ -67,5 +70,5 @@ int main() {
   sycl::free(A, sycl_context);
   sycl::free(B, sycl_context);
   sycl::free(C, sycl_context);
-  return 0;
+  return EXIT_SUCCESS;
 }

@@ -19,5 +19,5 @@ int main() {
     std::cerr << e.what() << std::endl;
   }
   std::cout << "Exception handled.\n";
-  return 0;
+  return EXIT_SUCCESS;
 }

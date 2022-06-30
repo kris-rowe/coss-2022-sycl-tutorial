@@ -4,7 +4,7 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  const std::size_t vector_length = 2000;
+  const int vector_length = 2000;
   std::vector<double> x_host(vector_length, 1.0);
   std::vector<double> y_host(vector_length, 1.0);
 
@@ -25,12 +25,12 @@ int main() {
   sycl::event copy_y = sycl_queue.copy(y_host.data(), y, y_host.size());
 
   // For portability, find the maximum work-group size of the device.
-  const std::size_t work_group_size =
+  const int work_group_size =
       sycl_device.get_info<sycl::info::device::max_work_group_size>();
-  
+
   // The global range must be divisible by the work-group size.
   // Compute the ceiling function to determine an appropriate range.
-  const std::size_t work_group_count =
+  const int work_group_count =
       (vector_length + work_group_size - 1) / work_group_size;
 
   sycl::range<1> global_range(work_group_size * work_group_count);
@@ -65,5 +65,5 @@ int main() {
   sycl::free(x, sycl_context);
   sycl::free(y, sycl_context);
   sycl::free(xdoty, sycl_context);
-  return 0;
+  return EXIT_SUCCESS;
 }

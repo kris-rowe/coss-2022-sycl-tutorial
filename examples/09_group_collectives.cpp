@@ -21,8 +21,8 @@ int main() {
       for (int i{}; i < number_of_nodes; ++i) {
         int index = i + number_of_nodes * j + nodes_per_element * e;
         u_host[index] = index;
-        bool on_boundary = (i == 0) || (i == (number_of_nodes - 1)) || (j == 0) ||
-                           (j == (number_of_nodes - 1));
+        bool on_boundary = (i == 0) || (i == (number_of_nodes - 1)) ||
+                           (j == 0) || (j == (number_of_nodes - 1));
         if (on_boundary) {
           ub_valid[b] = index;
           ++b;
@@ -56,7 +56,7 @@ int main() {
                         (j == (number_of_nodes - 1));
 
       auto wg = work_item.get_group();
-      
+
       // Find the offset to the next boundary point within the group
       int b = sycl::exclusive_scan_over_group(wg, on_boundary, sycl::plus<>());
       if (on_boundary) {
@@ -80,5 +80,5 @@ int main() {
 
   sycl::free(u, sycl_context);
   sycl::free(ub, sycl_context);
-  return 0;
+  return EXIT_SUCCESS;
 }

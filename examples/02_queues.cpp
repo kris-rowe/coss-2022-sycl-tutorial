@@ -4,8 +4,8 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  const std::size_t vector_length = 100;
-  std::vector<double> host_original(vector_length,1.0);
+  const int vector_length = 100;
+  std::vector<double> host_original(vector_length, 1.0);
   std::vector<double> host_copy(vector_length);
 
   // Create a sycl::queue using the default device selector
@@ -28,17 +28,17 @@ int main() {
   sycl_queue.wait();
 
   // Verify the results.
-  for(const auto& x : host_copy) {
+  for (const auto& x : host_copy) {
     // Don't check for equality of floating-point values in production code!
-    if(1.0 != x) {
+    if (1.0 != x) {
       std::cout << "Verification failed!\n";
       return EXIT_FAILURE;
-    }  
+    }
   }
 
   std::cout << "Success!\n";
 
   // Free device memory
   sycl::free(device_vector, sycl_context);
-  return 0;
+  return EXIT_SUCCESS;
 }

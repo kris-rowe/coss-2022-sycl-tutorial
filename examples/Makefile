@@ -1,4 +1,4 @@
-CXX ?= clang++
+CXX ?= icpx
 CXXFLAGS ?= -O2 -std=c++17
 SYCLFLAGS ?= -fsycl
 CXXFLAGS += $(SYCLFLAGS)

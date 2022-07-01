@@ -30,4 +30,4 @@ jobs:
         run: |
           source /opt/intel/oneapi/setvars.sh
           cd examples
-          CXX=icpx CXXFLAGS="-O2 -fsycl" make -j
+          CXX=icpx SYCLFLAGS="-fsycl" make -j

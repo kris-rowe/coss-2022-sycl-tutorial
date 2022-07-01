@@ -1,33 +1,25 @@
-ifeq ($(CXX),g++)
-	CXX:= clang++
-endif
-CXXFLAGS ?= -O2 -fsycl -fsycl-targets=nvptx64-nvidia-cuda
+CXX ?= clang++
+CXXFLAGS ?= -O2 -std=c++17
+SYCLFLAGS ?= -fsycl -fsycl-targets=nvptx64-nvidia-cuda
+CXXFLAGS += $(SYCLFLAGS)
 
-%: %.cpp
-	$(CXX) $(CXXFLAGS) $< -o $(@)
+examples = 00_device_info 01_memory_management 02_queues 03_kernels \
+04_events 05_device_functions 06_ranges	07_local_memory	08_reductions \
+09_group_collectives 10_error_handling 
 
-
-examples = \
-00_device_info \
-01_memory_management \
-02_queues \
-03_kernels \
-04_events \
-05_device_functions \
-06_ranges	\
-07_local_memory	\
-08_reductions \
-09_group_collectives \
-10_error_handling 
-
+.PHONY: all
 all: $(examples)
-default: all
+
+define build_example =
+$(1): $$($(1).cpp)
+	$(CXX) $(CXXFLAGS) $(1).cpp -o $(1)
+endef
+
+$(foreach example,$(examples),$(eval $(call build_example,$(example))))
 
 clean:
-	-rm -f $(examples)
+	$(RM) $(examples)
 
 print-info:
 	@echo "CXX: $(CXX)"
 	@echo "CXXFLAGS: $(CXXFLAGS)"
-
-.PHONY: default all clean print-info

@@ -37,8 +37,6 @@ Various software packages are provided through [environment modules](https://dev
 $ module load /glob/module-files/intel-oneapi/latest
 ```
 
-
-
 ### Build
 
 The [examples](examples/) and [exercises](exercises/) directories contain makefiles to build their corresponding codes. By default, it is assumed that the Intel LLVM C++ compiler&mdash;named `icpx`&mdash;will be used. 
@@ -76,7 +74,7 @@ Found a bug, spelling mistake, or other error? Open an [issue](https://github.co
 
 Have an interesting solution to one of the exercises or other code related to the tutorial that you would like to share? Create a post in the [Show and tell](https://github.com/kris-rowe/coss-2022-sycl-tutorial/discussions/categories/show-and-tell) discussions category.
 
-#### Develoment
+#### Development
 
 If you are interested in helping to further develop this tutorial please reach out to [Kris Rowe](mailto:kris.rowe@anl.gov).
 

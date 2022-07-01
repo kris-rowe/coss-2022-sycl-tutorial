@@ -3,22 +3,22 @@ CXXFLAGS := -O2 -std=c++17
 SYCLFLAGS := -fsycl
 CXXFLAGS += $(SYCLFLAGS)
 
-examples = 00_device_info 01_memory_management 02_queues 03_kernels \
+programs = 00_device_info 01_memory_management 02_queues 03_kernels \
 04_events 05_device_functions 06_ranges	07_local_memory	08_reductions \
 09_group_collectives 10_error_handling 
 
 .PHONY: all
-all: $(examples)
+all: $(programs)
 
-define build_example =
+define build_program =
 $(1): $$($(1).cpp)
 	$(CXX) $(CXXFLAGS) $(1).cpp -o $(1)
 endef
 
-$(foreach example,$(examples),$(eval $(call build_example,$(example))))
+$(foreach program,$(programs),$(eval $(call build_program,$(program))))
 
 clean:
-	$(RM) $(examples)
+	$(RM) $(programs)
 
 print-info:
 	@echo "CXX: $(CXX)"

@@ -25,9 +25,7 @@ int main() {
   sycl::event copy_y = sycl_queue.copy(y_host.data(), y, y_host.size());
 
   // For portability, find the maximum work-group size of the device.
-  const int work_group_size =
-      sycl_device.get_info<sycl::info::device::max_work_group_size>();
-
+  const int work_group_size = 256;
   // The global range must be divisible by the work-group size.
   // Compute the ceiling function to determine an appropriate range.
   const int work_group_count =

@@ -5,10 +5,10 @@
 
 int main() {
   const int vector_length = 2000;
-  std::vector<double> a_host(vector_length);
-  std::vector<double> b_host(vector_length, 1.0);
-  std::vector<double> c_host(vector_length, 1.0);
-  const double s = 1.0;
+  std::vector<float> a_host(vector_length);
+  std::vector<float> b_host(vector_length, 1.0);
+  std::vector<float> c_host(vector_length, 1.0);
+  const float s = 1.0;
 
   // Create a sycl::queue using the default device selector
   sycl::device sycl_device{sycl::default_selector()};
@@ -16,12 +16,12 @@ int main() {
   sycl::queue sycl_queue{sycl_context, sycl_device};
 
   // Allocate vectors on the device
-  double* a =
-      sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
-  double* b =
-      sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
-  double* c =
-      sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
+  float* a =
+      sycl::malloc_device<float>(vector_length, sycl_device, sycl_context);
+  float* b =
+      sycl::malloc_device<float>(vector_length, sycl_device, sycl_context);
+  float* c =
+      sycl::malloc_device<float>(vector_length, sycl_device, sycl_context);
 
   // Copy from the host to the device.
   sycl::event copy_b = sycl_queue.copy(b_host.data(), b, b_host.size());

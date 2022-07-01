@@ -5,8 +5,8 @@
 
 int main() {
   const int vector_length = 100;
-  std::vector<double> host_original(vector_length, 1.0);
-  std::vector<double> host_copy(vector_length);
+  std::vector<float> host_original(vector_length, 1.0);
+  std::vector<float> host_copy(vector_length);
 
   // Create a sycl::queue using the default device selector
   sycl::device sycl_device{sycl::default_selector()};
@@ -14,8 +14,8 @@ int main() {
   sycl::queue sycl_queue{sycl_context, sycl_device};
 
   // Allocate a vector on the device
-  double* device_vector =
-      sycl::malloc_device<double>(vector_length, sycl_device, sycl_context);
+  float* device_vector =
+      sycl::malloc_device<float>(vector_length, sycl_device, sycl_context);
 
   // Copy the vector of values from the host to the device
   sycl_queue.copy(host_original.data(), device_vector, host_original.size());

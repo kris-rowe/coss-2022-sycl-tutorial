@@ -26,9 +26,9 @@ int main() {
   sycl::context sycl_context{sycl_device};
 
   // Allocate 1 MB of device memory accessible, not accessible by the hose
-  const int double_count = megabyte / sizeof(double);
-  double* x =
-      sycl::malloc_device<double>(double_count, sycl_device, sycl_context);
+  const int float_count = megabyte / sizeof(float);
+  float* x =
+      sycl::malloc_device<float>(float_count, sycl_device, sycl_context);
 
   // Allocate 1 MB of (page-locked) host memory accessible by the device
   constexpr int int_count = megabyte / sizeof(int);

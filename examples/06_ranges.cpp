@@ -8,9 +8,9 @@ int main() {
   constexpr int K{64};
 
   // Linear arrays to store matrices
-  std::vector<double> A_host(M * K, 1.0);
-  std::vector<double> B_host(K * N, 1.0);
-  std::vector<double> C_host(M * N);
+  std::vector<float> A_host(M * K, 1.0);
+  std::vector<float> B_host(K * N, 1.0);
+  std::vector<float> C_host(M * N);
 
   // Create a sycl::queue using the default device selector
   sycl::device sycl_device{sycl::default_selector()};
@@ -18,12 +18,12 @@ int main() {
   sycl::queue sycl_queue{sycl_context, sycl_device};
 
   // Allocate matrices on the device
-  double* A =
-      sycl::malloc_device<double>(A_host.size(), sycl_device, sycl_context);
-  double* B =
-      sycl::malloc_device<double>(B_host.size(), sycl_device, sycl_context);
-  double* C =
-      sycl::malloc_device<double>(C_host.size(), sycl_device, sycl_context);
+  float* A =
+      sycl::malloc_device<float>(A_host.size(), sycl_device, sycl_context);
+  float* B =
+      sycl::malloc_device<float>(B_host.size(), sycl_device, sycl_context);
+  float* C =
+      sycl::malloc_device<float>(C_host.size(), sycl_device, sycl_context);
 
   // Copy from the host to the device
   sycl::event copy_a = sycl_queue.copy(A_host.data(), A, A_host.size());
@@ -45,7 +45,7 @@ int main() {
 
       // Compute C = A * B
       // Each work-group will compute a 16x16 block of C
-      double C_ij{};
+      float C_ij{};
       for (int k = 0; k < K; ++k) {
         C_ij += A[i + M * k] * B[k + K * j];
       }
@@ -59,7 +59,7 @@ int main() {
   // Verify the results
   // Verify the results.
   for (const auto& C_ij : C_host) {
-    if (static_cast<double>(K) != C_ij) {
+    if (static_cast<float>(K) != C_ij) {
       std::cout << "Verification failed!\n";
       return EXIT_FAILURE;
     }

@@ -31,12 +31,12 @@ int main() {
       sycl::malloc_device<float>(float_count, sycl_device, sycl_context);
 
   // Allocate 1 MB of (page-locked) host memory accessible by the device
-  constexpr int int_count = megabyte / sizeof(int);
+  const int int_count = megabyte / sizeof(int);
   int* i = sycl::malloc_host<int>(int_count, sycl_context);
 
   // Allocate 1 MB of shared memory accessible by both the host and the device
-  constexpr int float_count = megabyte / sizeof(float);
-  float* y = sycl::malloc_shared<float>(float_count, sycl_device, sycl_context);
+  const int uint32_count = megabyte / sizeof(uint32_t);
+  uint32_t* y = sycl::malloc_shared<uint32_t>(uint32_count, sycl_device, sycl_context);
 
   // Check that the pointer belongs to the correct device.
   // Not needed here, but useful for libraries or complex applications.

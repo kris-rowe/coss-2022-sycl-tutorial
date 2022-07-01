@@ -1,6 +1,6 @@
-CXX ?= icpx
-CXXFLAGS ?= -O2 -std=c++17
-SYCLFLAGS ?= -fsycl
+CXX := icpx
+CXXFLAGS := -O2 -std=c++17
+SYCLFLAGS := -fsycl
 CXXFLAGS += $(SYCLFLAGS)
 
 examples = 00_device_info 01_memory_management 02_queues 03_kernels \

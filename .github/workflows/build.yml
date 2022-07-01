@@ -30,4 +30,4 @@ jobs:
         run: |
           source /opt/intel/oneapi/setvars.sh
           cd examples
-          CXX=icpx make -j
+          make -j

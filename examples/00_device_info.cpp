@@ -42,7 +42,7 @@ int main() {
 
       printDeviceType(d);
 
-      int memory = d.get_info<sycl::info::device::global_mem_size>();
+      uint64_t memory = d.get_info<sycl::info::device::global_mem_size>();
       std::cout << "Memory: " << (memory / gigabyte) << " GB\n";
 
       uint64_t max_wg_size =

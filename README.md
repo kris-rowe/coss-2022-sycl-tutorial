@@ -12,17 +12,32 @@ This repository contains notes and source code for the SYCL Tutorial presented v
 - C++17 compiler
 - SYCL 2020 implementation
 
-All required software already installed on Compute Ontario systems and Intel Devcloud as described below.
+All required software already installed on Digital Research Alliance of Canada systems and Intel Devcloud as described below.
 
 > If a SYCL 2020 implementation is not installed on your current system, one can be built from [Intel's LLVM fork on GitHub](https://github.com/intel/llvm). Instructions for building and setting up the Intel LLVM compiler can be found [here](https://intel.github.io/llvm-docs/).
 
-#### Compute Ontario Systems
+#### Digital Research Aliance of Canada Systems
 
-On Compute Ontario systems, a SYCL 2020 implementation is available through the [intel/2022.1.0 module](https://docs.alliancecan.ca/wiki/Available_software), which can be loaded using
+On DRA Canada systems, a SYCL 2020 implementation is available through two [globally installed modules](https://docs.alliancecan.ca/wiki/Available_software).
+
+##### Using SYCL on GPUs
+
+The `dpc++/2022-06` module provides a build of the open-source Intel LLVM compilers with the CUDA plug-in enabled. Using the `clang++` compiler with the flags `-fsycl -fsycl-targets=nvptx64-nvidia-cuda`, SYCL applications can be built and run on NVIDIA GPUs&mdash;like the P100 and V100 GPUs in Graham. 
+
+To load this module call
+```shell
+$ module load cuda/11.4 
+$ module load dpc++/2022-06
+```
+
+##### Using SYCL on CPUs
+
+The Intel oneAPI Toolkit compilers are included in the `intel/2022.1.0` module. Using the `icpx` compiler with the flag `-fsycl`, SYCL applications can be built and run on Intel CPUs via the Intel OpenCL runtime.
+
+To load this module call
 ```shell
 $ module load intel/2022.1.0
 ```
-Currently only the OpenCL CPU platform is available through this module, however it is possible to build and run all of the example codes.
 
 #### Intel DevCloud
 
@@ -39,7 +54,7 @@ $ module load /glob/module-files/intel-oneapi/latest
 
 ### Build
 
-The [examples](examples/) and [exercises](exercises/) directories contain makefiles to build their corresponding codes. By default, it is assumed that the Intel LLVM C++ compiler&mdash;named `icpx`&mdash;will be used. 
+The [examples](examples/) and [exercises](exercises/) directories contain makefiles to build their corresponding codes. By default, it is assumed that the LLVM `clang++` compiler will be used to build code for NVIDIA GPUs.
 
 Each example is contained in a single .cpp file, for which the makefile will generate an executable with the same name. Examples can be built individually, or all at once by calling 
 ```shell

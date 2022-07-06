@@ -4,27 +4,40 @@
 
 #include "CL/sycl.hpp"
 
-int main() {
-  auto sycl_devices = sycl::device::get_devices(sycl::info::device_type::gpu);
-  if (2 > sycl_devices.size()) {
-    std::cout << "Only one GPU is available.\n";
-    return EXIT_FAILURE;
+sycl::platform findMultiDevicePlatform() {
+  auto platforms = sycl::platform::get_platforms();
+  auto platform_ptr = std::find_if(platforms.begin(), platforms.end(),
+                                   [](const sycl::platform& sycl_platform) {
+                                     auto devices = sycl_platform.get_devices();
+                                     if (1 < devices.size()) {
+                                       return true;
+                                     } else {
+                                       return false;
+                                     }
+                                   });
+  if (platforms.end() == platform_ptr) {
+    std::cerr << "A multi-device platform is not available.\n";
+    std::exit(EXIT_FAILURE);
   }
+  return *platform_ptr;
+}
 
-  // Select the first two devices
+int main() {
+  sycl::platform sycl_platform = findMultiDevicePlatform();
+  auto sycl_devices = sycl::device::get_devices();
 
-  // Create one context per device
+  // Create a *single context* containing the first two devices
 
-  // Create one queue on each device
+  // Create one queue on each of the first two devices
 
   // Create a host vector
   const size_t vector_length = 100;
-  std::vector<float> host_vector_1(vector_length,1.0);
+  std::vector<float> host_vector_1(vector_length, 1.0);
 
-  // Allocate a vector the each of the devices
+  // Allocate a vector on each of the the first two devices
 
   // Copy values from the host to the first device
-  
+
   // Copy values from the first device to the second
 
   // Copy values from the second device to the host

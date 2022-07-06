@@ -2,7 +2,7 @@
 
 #include "CL/sycl.hpp"
 
-constexpr int gigabyte{1024 * 1024 * 1024};
+constexpr uint64_t gigabyte{1024 * 1024 * 1024};
 
 void printDeviceType(sycl::device& sycl_device) {
   sycl::info::device_type device_type =

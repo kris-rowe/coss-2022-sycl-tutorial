@@ -4,12 +4,12 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  int number_of_nodes = 8;
-  int number_of_elements = 1000;
-  int nodes_per_element = number_of_nodes * number_of_nodes;
-  int boundary_per_element = 4 * (number_of_nodes - 1);
-  int total_nodes = number_of_elements * nodes_per_element;
-  int total_boundary = number_of_elements * boundary_per_element;
+  size_t number_of_nodes = 8;
+  size_t number_of_elements = 1000;
+  size_t nodes_per_element = number_of_nodes * number_of_nodes;
+  size_t boundary_per_element = 4 * (number_of_nodes - 1);
+  size_t total_nodes = number_of_elements * nodes_per_element;
+  size_t total_boundary = number_of_elements * boundary_per_element;
 
   std::vector<int> u_host(total_nodes);
   std::vector<int> ub_host(total_boundary);

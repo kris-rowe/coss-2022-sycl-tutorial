@@ -4,7 +4,7 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  const int vector_length = 2000;
+  const size_t vector_length = 2000;
   std::vector<float> a_host(vector_length);
   std::vector<float> b_host(vector_length, 1.0);
   std::vector<float> c_host(vector_length, 1.0);

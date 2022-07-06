@@ -4,7 +4,7 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  const int vector_length = 100;
+  const size_t vector_length = 100;
   std::vector<float> host_original(vector_length, 1.0);
   std::vector<float> host_copy(vector_length);
 

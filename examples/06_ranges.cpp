@@ -3,9 +3,9 @@
 #include "CL/sycl.hpp"
 
 int main() {
-  constexpr int M{256};
-  constexpr int N{128};
-  constexpr int K{64};
+  constexpr size_t M{256};
+  constexpr size_t N{128};
+  constexpr size_t K{64};
 
   // Linear arrays to store matrices
   std::vector<float> A_host(M * K, 1.0);

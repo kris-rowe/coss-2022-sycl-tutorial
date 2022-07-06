@@ -23,4 +23,4 @@ Extend the `device_info` example to print whether a device supports `double` and
 
 ## 3. Peer-to-peer Copy
 
-(... Exercise on copying data directly between GPUs ...)
+This exercise extends the `queues` example and demonstrates the copying of memory between two GPU devices. Follow the source-code comments in `03_p2p_copy.cpp`.

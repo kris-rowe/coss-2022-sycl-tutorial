@@ -27,3 +27,14 @@ Suppose that a hypothetical SYCL application targetting GPUs requires the use of
 
 > Note: You should handle the runtime exception if no suitable device can be found. If needed, see the `error_handling` example for a refresher exception handling.
 
+## 3. Batched AXPY
+
+Compute the BLAS axpy function for a group of vectors of the same length, stored consecutively in memory.
+
+All of the necessary setup, cleanup, and verification is already implemented in `03_batch_axpy.cpp`. Following the source code comments, implement the body of the `axpy_batch` function. You will need to correct the global range for the kernel.
+
+The vector and batch sizes can be passed as program arguments:
+```shell
+$ ./03_batch_axpy --vector-size N --batch-size B
+```
+Test the correctness of your implementation for different batch and vector sizes.

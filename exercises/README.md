@@ -19,5 +19,11 @@ A list of [device aspects](https://www.khronos.org/registry/SYCL/specs/sycl-2020
 
 Extend the `device_info` example to print whether a device supports `double` and `half` precision types.
 
-## 2. 
+## 2. Device Selection
+
+A [sycl::device_selector](https://www.khronos.org/registry/SYCL/specs/sycl-2020/html/sycl-2020.html#sec:device-selector) is a function object which takes a `const sycl::device&` and returns an `int` score. When passed as an argument to the `sycl::device` constructor, the resulting device is the one with the highest score. If negative value is returned&mdash;for example, when no suitable device is found&mdash;a SYCL runtime exception is thrown.
+
+Suppose that a hypothetical SYCL application targetting GPUs requires the use of `double` precision floating point numbers and 64-bit atomic operations. Create a `device_selector` which looks for such a device, and causes a runtime exception othersie. This can be accomplished by extending the `sycl::device_selector` class and implementing the member function `int operator()(const sycl::device& sycl_device) const`, as outlined in `02_device_selection.cpp`. 
+
+> Note: You should handle the runtime exception if no suitable device can be found. If needed, see the `error_handling` example for a refresher exception handling.
 

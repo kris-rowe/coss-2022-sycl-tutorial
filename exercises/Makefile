@@ -3,7 +3,7 @@ CXXFLAGS := -O2 -std=c++17
 SYCLFLAGS := -fsycl -fsycl-targets=nvptx64-nvidia-cuda
 CXXFLAGS += $(SYCLFLAGS)
 
-programs = 01_more_device_info
+programs = 01_more_device_info 02_device_selection
 
 .PHONY: all
 all: $(programs)

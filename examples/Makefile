@@ -1,6 +1,6 @@
 CXX := clang++
 CXXFLAGS := -O2 -std=c++17
-SYCLFLAGS := -fsycl -fsycl-targets=nvptx64-nvidia-cuda
+SYCLFLAGS := -fsycl -fsycl-targets=nvptx64-unknown-unknown
 CXXFLAGS += $(SYCLFLAGS)
 
 programs = 00_device_info 01_memory_management 02_queues 03_kernels \

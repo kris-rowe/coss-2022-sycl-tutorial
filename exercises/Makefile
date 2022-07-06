@@ -1,9 +1,9 @@
-CXX := icpx
+CXX := clang++
 CXXFLAGS := -O2 -std=c++17
-SYCLFLAGS := -fsycl
+SYCLFLAGS := -fsycl -fsycl-targets=nvptx64-nvidia-cuda
 CXXFLAGS += $(SYCLFLAGS)
 
-programs = 01_more_device_info 
+programs = 01_more_device_info 03_p2p_copy
 
 .PHONY: all
 all: $(programs)

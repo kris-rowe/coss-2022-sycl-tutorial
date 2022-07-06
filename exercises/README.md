@@ -20,3 +20,7 @@ A list of [device aspects](https://www.khronos.org/registry/SYCL/specs/sycl-2020
 Extend the `device_info` example to print whether a device supports `double` and `half` precision types.
 
 ## 2. 
+
+## 3. Peer-to-peer Copy
+
+(... Exercise on copying data directly between GPUs ...)

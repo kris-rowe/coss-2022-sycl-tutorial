@@ -16,7 +16,7 @@ All required software already installed on Digital Research Alliance of Canada s
 
 > If a SYCL 2020 implementation is not installed on your current system, one can be built from [Intel's LLVM fork on GitHub](https://github.com/intel/llvm). Instructions for building and setting up the Intel LLVM compiler can be found [here](https://intel.github.io/llvm-docs/).
 
-#### Digital Research Aliance of Canada Systems
+#### Digital Research Alliance of Canada Systems
 
 On DRA Canada systems, a SYCL 2020 implementation is available through two [globally installed modules](https://docs.alliancecan.ca/wiki/Available_software).
 

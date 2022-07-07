@@ -38,3 +38,18 @@ The vector and batch sizes can be passed as program arguments:
 $ ./03_batch_axpy --vector-size N --batch-size B
 ```
 Test the correctness of your implementation for different batch and vector sizes.
+
+## 4. Kernel Fusion
+
+ Kernel Fusion combines the logic for two or more kernels into a single kernel&mdash;by directly merging source code or using advanced programming techniques&mdash;to avoid extra kernel launches and trips through the memory hierarchy.
+
+Often, this strategy can improve performance when the results of a *compute bound* kernel (think BLAS 2/3) are used by a *memory bound* kernel (think BLAS 1) which immediately follows. A common example of where this occurs is in iterative solvers for linear-systems, such as the conjugate gradient method.
+
+The program given in `04_kernel_fusion.cpp` computes the BLAS axpy function for two vectors, followed by the squared norm of the result. Fused and unfused kernels are run a fixed number of iterations to obtain runtime statitistcs.
+
+The vector size and number of trials can be passed as program arguments:
+```shell
+$ ./04_kernel_fusion --vector-size N --number-of-trials T
+```
+
+Perform a series of experiments, running the `kernel_fusion` benchmark for a range of vector sizes&mdash;e.g., between 2^18 (1 MB) and 2^28 (1 GB). Plot the mean runtime against the vector size for both the fused and unfused kernels. For which vector sizes does kernel fusion provide the most benefit? Can you explain the observed behaviour in the limit of small vector sizes? large vector sizes?

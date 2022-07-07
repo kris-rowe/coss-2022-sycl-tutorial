@@ -1,7 +1,6 @@
+#include <CL/sycl.hpp>
 #include <random>
 #include <vector>
-
-#include "CL/sycl.hpp"
 
 int main() {
   size_t number_of_nodes = 8;

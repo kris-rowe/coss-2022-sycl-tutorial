@@ -1,7 +1,6 @@
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <vector>
-
-#include "CL/sycl.hpp"
 
 int main() {
   const size_t vector_length = 2000;
@@ -31,10 +30,9 @@ int main() {
   sycl::event dotp_kernel = sycl_queue.submit([&](sycl::handler& cgh) {
     cgh.depends_on({copy_x, copy_y});
     auto reduce_xdoty = sycl::reduction(xdoty, sycl::plus<>());
-    cgh.parallel_for(kernel_range, reduce_xdoty,
-                     [=](sycl::id<1> i, auto& xdoty_) {
-                      xdoty_ += x[i] * y[i];
-                     });
+    cgh.parallel_for(
+        kernel_range, reduce_xdoty,
+        [=](sycl::id<1> i, auto& xdoty_) { xdoty_ += x[i] * y[i]; });
   });
 
   // Copy result from device to host; synchronize;

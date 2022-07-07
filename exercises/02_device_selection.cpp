@@ -1,6 +1,5 @@
+#include <CL/sycl.hpp>
 #include <iostream>
-
-#include "CL/sycl.hpp"
 
 struct GPUWithFP64AtomicsSelector : sycl::device_selector {
   int operator()(const sycl::device& sycl_device) const {

@@ -1,6 +1,5 @@
+#include <CL/sycl.hpp>
 #include <vector>
-
-#include "CL/sycl.hpp"
 
 int main() {
   constexpr size_t M{256};

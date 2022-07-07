@@ -1,7 +1,6 @@
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <vector>
-
-#include "CL/sycl.hpp"
 
 int main() {
   const size_t vector_length = 100;

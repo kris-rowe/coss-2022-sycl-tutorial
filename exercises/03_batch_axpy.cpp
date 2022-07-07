@@ -1,10 +1,9 @@
 #include <getopt.h>
 
+#include <CL/sycl.hpp>
 #include <exception>
 #include <iostream>
 #include <vector>
-
-#include "CL/sycl.hpp"
 
 // Given a group of vectors of the same length, compute
 // for (b=0; b < batch_size; ++b) {
@@ -63,6 +62,7 @@ int main(int argc, char* argv[]) {
     switch (c) {
       case 'N':
         vector_size = std::stoul(optarg);
+        break;
       case 'B':
         batch_size = std::stoul(optarg);
         break;

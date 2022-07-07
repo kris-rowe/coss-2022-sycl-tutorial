@@ -1,6 +1,5 @@
+#include <CL/sycl.hpp>
 #include <iostream>
-
-#include "CL/sycl.hpp"
 
 int main() {
   try {

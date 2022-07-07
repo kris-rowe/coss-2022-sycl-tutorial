@@ -1,7 +1,6 @@
+#include <CL/sycl.hpp>
 #include <iostream>
 #include <vector>
-
-#include "CL/sycl.hpp"
 
 template <typename T>
 void axpy(int N, T alpha, const T* x, T* y) {

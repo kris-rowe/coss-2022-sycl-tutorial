@@ -1,6 +1,5 @@
+#include <CL/sycl.hpp>
 #include <vector>
-
-#include "CL/sycl.hpp"
 
 // Aliasing oneAPI DPC++ specific extensions
 namespace dpcpp = sycl::ext::oneapi;

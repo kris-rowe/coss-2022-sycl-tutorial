@@ -1,6 +1,5 @@
+#include <CL/sycl.hpp>
 #include <iostream>
-
-#include "CL/sycl.hpp"
 
 constexpr int gigabyte{1024 * 1024 * 1024};
 
@@ -51,7 +50,7 @@ int main() {
 
       //----------
       // Find and print out other device info here.
-      
+
       //----------
       ++device_id;
     }

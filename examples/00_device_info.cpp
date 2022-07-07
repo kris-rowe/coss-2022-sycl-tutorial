@@ -1,6 +1,5 @@
+#include <CL/sycl.hpp>
 #include <iostream>
-
-#include "CL/sycl.hpp"
 
 constexpr uint64_t gigabyte{1024 * 1024 * 1024};
 

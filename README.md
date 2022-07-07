@@ -101,6 +101,8 @@ All discussion and other forms of participation related to this project should b
 
 This work was supported by [Argonne Leadership Computing Facility](https://www.alcf.anl.gov), which is a DOE Office of Science User Facility supported under Contract DE-AC02-06CH11357.
 
+A shout-out to Thomas Applencourt (@TApplencourt) for providing feedback on content and for catching numerous spelling/coding errors.
+
 ## License
 
 This project is available under a [MIT License](LICENSE.md)

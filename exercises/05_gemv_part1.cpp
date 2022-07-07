@@ -1,53 +1,11 @@
-#include <getopt.h>
-
 #include <CL/sycl.hpp>
-#include <exception>
-#include <iomanip>
 #include <iostream>
 #include <random>
 #include <vector>
 
-struct arguments_t {
-  size_t M = 1024;
-  size_t N = 1024;
-  size_t trials = 100;
-};
+#include "gemv.hpp"
 
-arguments_t readArguments(int argc, char* argv[]) {
-  static struct option long_options[] = {
-    {"rows", required_argument, 0, 'M'},
-    {"columns", required_argument, 0, 'N'},
-    {"trials", required_argument, 0, 'T'}};
-
-  arguments_t arguments;
-  while (1) {
-    int option_index{};
-    int c = getopt_long(argc, argv, "M:N:T:", long_options, &option_index);
-    if (0 > c) break;
-
-    switch (c) {
-      case 'M':
-        arguments.M = std::stoul(optarg);
-        break;
-      case 'N':
-        arguments.N = std::stoul(optarg);
-        break;
-      case 'T':
-        arguments.trials = std::stoul(optarg);
-      default:
-        std::cerr << "Usage: gemv_part1 [-M or --rows nrows] [-N or --columns "
-                     "ncolumns] [-T or --trials ntrials] \n";
-        exit(EXIT_FAILURE);
-    }
-  }
-  std::cout << std::right;
-  std::cout << std::setw(10) << "GEMV\n";
-  std::cout << std::setw(10) << "M: " << arguments.M << "\n";
-  std::cout << std::setw(10) << "N: " << arguments.N << "\n";
-  std::cout << std::setw(10) << "Trials: " << arguments.trials << "\n";
-
-  return arguments;
-}
+namespace {
 
 // Naive implementation of GEMV function for verification purposes.
 // Computes y = alpha * A(x) + beta * y
@@ -82,11 +40,15 @@ sycl::event gemv(sycl::queue& sycl_queue, int64_t m, int64_t n, T alpha,
   return gemv_event;
 }
 
+}  // namespace
+
 int main(int argc, char* argv[]) {
   auto arguments = readArguments(argc, argv);
+  printArguments(arguments);
+
   const size_t M = arguments.M;
   const size_t N = arguments.N;
-  const size_t numer_of_trials = arguments.trials;
+  const size_t number_of_trials = arguments.trials;
 
   std::vector<float> x_host(N);
   std::vector<float> y_host(N);

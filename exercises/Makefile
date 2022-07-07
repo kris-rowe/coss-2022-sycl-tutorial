@@ -10,7 +10,7 @@ all: $(programs)
 
 define build_program =
 $(1): $$($(1).cpp)
-	$(CXX) $(CXXFLAGS) $(SYCLFLAGS) $(1).cpp -o $(1)
+	$(CXX) $(CXXFLAGS) $(SYCLFLAGS) -Iinclude $(1).cpp -o $(1)
 endef
 
 $(foreach program,$(programs),$(eval $(call build_program,$(program))))

@@ -1,9 +1,11 @@
-#include <getopt.h>
-
 #include <CL/sycl.hpp>
 #include <exception>
 #include <iostream>
 #include <vector>
+
+#include "axpy.hpp"
+
+namespace {
 
 // Given a group of vectors of the same length, compute
 // for (b=0; b < batch_size; ++b) {
@@ -43,45 +45,24 @@ sycl::event axpy_batch(sycl::queue& queue, int64_t N, T alpha, const T* x,
   return kernel_event;
 }
 
-static struct option long_options[] = {
-    {"vector-size", required_argument, 0, 'N'},
-    {"batch-size", required_argument, 0, 'B'}};
+}  // namespace
 
 int main(int argc, char* argv[]) {
-  // Default parameters
-  size_t vector_size = 2000;
-  size_t batch_size = 7;
+  auto arguments = readArguments(argc, argv);
+  printArguments(arguments);
 
-  while (1) {
-    int option_index{};
-    int c = getopt_long(argc, argv, "N:B:", long_options, &option_index);
-    if (0 > c) break;
+  const size_t N = arguments.N;
+  const size_t batch_size = arguments.batch_size;
+  const size_t total_size = N * batch_size;
 
-    switch (c) {
-      case 'N':
-        vector_size = std::stoul(optarg);
-        break;
-      case 'B':
-        batch_size = std::stoul(optarg);
-        break;
-      default:
-        std::cerr << "Usage: batch_axpy [-N vector-size] [-B batch-size]\n";
-        exit(EXIT_FAILURE);
-    }
-  }
-
-  std::cout << "Vector Size: " << vector_size << "\n";
-  std::cout << "Batch Size: " << batch_size << "\n";
-
-  const size_t total_size = vector_size * batch_size;
   std::vector<float> x_host(total_size);
   std::vector<float> y_host(total_size);
-  const float alpha = 1.0;
 
+  const float alpha = 1.0;
   for (size_t b{}; b < batch_size; ++b) {
-    for (size_t i{}; i < vector_size; ++i) {
-      x_host[i + vector_size * b] = float(b);
-      y_host[i + vector_size * b] = float(b);
+    for (size_t i{}; i < N; ++i) {
+      x_host[i + N * b] = float(b);
+      y_host[i + N * b] = float(b);
     }
   }
 
@@ -95,16 +76,15 @@ int main(int argc, char* argv[]) {
   sycl::event copy_x = sycl_queue.copy(x_host.data(), x, x_host.size());
   sycl::event copy_y = sycl_queue.copy(y_host.data(), y, y_host.size());
 
-  sycl::event axpy_batch_kernel =
-      axpy_batch(sycl_queue, total_size, alpha, x, vector_size, y, vector_size,
-                 batch_size, {copy_x, copy_y});
+  sycl::event axpy_batch_kernel = axpy_batch(
+      sycl_queue, total_size, alpha, x, N, y, N, batch_size, {copy_x, copy_y});
 
   sycl_queue.copy(y, y_host.data(), y_host.size(), {axpy_batch_kernel}).wait();
 
   // Verify the results.
   size_t i{};
   for (const auto& y_i : y_host) {
-    float expected = 2.0 * float(i / vector_size);
+    float expected = 2.0 * float(i / N);
     if (expected != y_i) {
       std::cout << "Verification failed!\n";
       std::cout << "expected: " << expected << ", actual: " << y_i << std::endl;

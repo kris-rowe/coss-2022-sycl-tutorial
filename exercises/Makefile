@@ -3,7 +3,7 @@ CXXFLAGS := -O2 -std=c++17
 SYCLFLAGS := -fsycl -fsycl-targets=nvptx64-nvidia-cuda
 
 programs = 01_more_device_info 02_device_selection 03_batch_axpy \
-04_kernel_fusion 05_gemv_part1
+04_kernel_fusion 05_gemv
 
 .PHONY: all
 all: $(programs)

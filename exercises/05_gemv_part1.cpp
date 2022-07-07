@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "gemv.hpp"
+#include "stats.hpp"
 
 namespace {
 
@@ -76,17 +77,16 @@ int main(int argc, char* argv[]) {
   float* y = sycl::malloc_device<float>(M, sycl_device, sycl_context);
   float* A = sycl::malloc_device<float>(M * N, sycl_device, sycl_context);
 
-  sycl_queue.copy(x_host.data(), x, N);
-  sycl_queue.copy(y_host.data(), y, M);
-  sycl_queue.copy(A_host.data(), A, M * N);
-  sycl_queue.wait();
+  sycl::event copy_x = sycl_queue.copy(x_host.data(), x, N);
+  sycl::event copy_y = sycl_queue.copy(y_host.data(), y, M);
+  sycl::event copy_A = sycl_queue.copy(A_host.data(), A, M * N);
 
-  gemv(sycl_queue, M, N, alpha, A, x, beta, y);
-  sycl_queue.wait();
+  sycl::event gemv_kernel =
+      gemv(sycl_queue, M, N, alpha, A, x, beta, y, {copy_x, copy_y, copy_A});
 
-  sycl_queue.copy(y, y_host.data(), M);
-  sycl_queue.wait();
+  sycl_queue.copy(y, y_host.data(), M, {gemv_kernel}).wait();
 
+  // Verify correctness
   for (int64_t i = 0; i < M; ++i) {
     if (std::abs(y_host[i] - y_valid[i]) > 1.0e-4f) {
       std::cout << "Verification failed!\n";
@@ -96,7 +96,20 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  std::cout << "Success!\n";
+  // Now run and time the kernel
+  std::vector<double> times(number_of_trials);
+  for (auto& runtime : times) {
+    auto start_time = std::chrono::high_resolution_clock::now();
+    gemv(sycl_queue, M, N, alpha, A, x, beta, y).wait();
+    auto finish_time = std::chrono::high_resolution_clock::now();
+    runtime =
+        std::chrono::duration<double, std::milli>(finish_time - start_time)
+            .count();
+  }
+
+  auto kernel_stats = stats::computeStats(times, "ms");
+  std::cout << "Kernel Times\n";
+  stats::printStats(kernel_stats);
 
   sycl::free(x, sycl_context);
   sycl::free(y, sycl_context);

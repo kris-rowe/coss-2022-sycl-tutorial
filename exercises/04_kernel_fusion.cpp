@@ -52,8 +52,6 @@ sycl::event axpyDotFused(sycl::queue& sycl_queue, int64_t N, T alpha,
 template <typename T, bool is_fused>
 std::vector<double> runBenchmark(sycl::queue& sycl_queue, int64_t N,
                                  size_t number_of_trials) {
-  std::vector<double> runtimes(number_of_trials);
-
   const T alpha = 1.0;
   T* x = sycl::malloc_device<T>(N, sycl_queue);
   T* y = sycl::malloc_device<T>(N, sycl_queue);
@@ -64,6 +62,7 @@ std::vector<double> runBenchmark(sycl::queue& sycl_queue, int64_t N,
   sycl_queue.fill(normy, T(0.0), 1);
   sycl_queue.wait();
 
+  std::vector<double> runtimes(number_of_trials);
   for (auto& runtime : runtimes) {
     auto start_time = std::chrono::high_resolution_clock::now();
     if (!is_fused) {

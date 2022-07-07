@@ -9,7 +9,7 @@ namespace {
 struct arguments_t {
   size_t M = 1024;
   size_t N = 1024;
-  size_t trials = 100;
+  size_t trials = 5000;
 };
 
 arguments_t readArguments(int argc, char* argv[]) {

@@ -67,7 +67,7 @@ Example programs do not take commandline arguments and can be run by calling
 ```shell
 $ ./example-name
 ```
-For any additional instructions on running the exercise codes, see the corresponding README.
+For any additional instructions on running the exercise codes, see the corresponding [README](exercises/README.md).
 
 ## Community
 

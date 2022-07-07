@@ -53,3 +53,25 @@ $ ./04_kernel_fusion --vector-size N --number-of-trials T
 ```
 
 Perform a series of experiments, running the `kernel_fusion` benchmark for a range of vector sizes&mdash;e.g., between 2^18 (1 MB) and 2^28 (1 GB). Plot the mean runtime against the vector size for both the fused and unfused kernels. For which vector sizes does kernel fusion provide the most benefit? Can you explain the observed behaviour in the limit of small vector sizes? large vector sizes?
+
+## 5. GEMV
+
+The program `05_gemv` benchmarks the performance of a kernel implementing the BLAS gemv function, which calculates dense matrix-vector products. Input data is initialized using pseudorandom values. First the correctness of the kernel is verified using a naive host-side gemv function. Then, the device kernel is run for a fixed number of iterations to obtain runtime statistics.
+
+The matrix dimensions and number of trials can be passed as program arguments:
+```shell
+$ ./05_gemv --rows M --columns N --number-of-trials T
+```
+
+A provided kernel contains a basic implementation of gemv, but is not very performant. Performance can be improved via shared local memory and/or using group collectives. However, these features can only be used with `nd_range` kernels.
+
+Transform the provided basic kernel into an `nd_range` kernels. You will need to choose an appropriate work-group size&mdash;for example, using heuristics or by querying device information. Recall that [all work-groups in a `parallel_for` must be the same size](https://www.khronos.org/registry/SYCL/specs/sycl-2020/html/sycl-2020.html#_work_group_data_parallel_kernels), implying that the global size of an `nd_range` must be a multiple of the work-group size in dimension. Therefore, you will need to address the most common case where matrix/vector dimensions are not divisble by the work-group size. This can be accomplished by a second kernel launch to address the remainder loop (range), or conditional checks within a single kernel launch.
+
+After verifying the correctnes of your `nd_range` kernel, consider how to improve kernel performance using a cache-blocking technique. Allocate shared local memory (see example \#7) to explicitly cache any matrix or vector tiles. Introduce group barriers where appropriate to avoid any data-race conditions&mdash;e.g., after writing to or reading from SLM.
+
+Run the `gemv` benchmark for different problem sizes using the provided basic kernel and your `nd_range` implementation. How does the performance of your new kernel compare with the original? For what problem sizes does data caching provide the greatest benefit? Experiment with different work-group sizes. Which work-group sizes lead to the best performance?
+
+### Challenge: Group Collectives
+
+Can you implement a similar tiled gemv `nd_range` kernel *without using shared local memory*? To accomplish this, you will need to use [group collectives](https://www.khronos.org/registry/SYCL/specs/sycl-2020/html/sycl-2020.html#sec:group-functions) to communicate data private to each work-item with other work-items in the same group or sub-group. Compare the performance of your new kernel with your `nd_range` kernel which used SLM.
+

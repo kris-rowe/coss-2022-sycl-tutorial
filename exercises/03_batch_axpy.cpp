@@ -43,11 +43,9 @@ sycl::event axpy_batch(sycl::queue& queue, int64_t N, T alpha, const T* x,
   return kernel_event;
 }
 
-static struct option long_options[] {
-  {"vector-size", required_argument, 0, 'N'}, {
-    "batch-size", required_argument, 0, 'B'
-  }
-};
+static struct option long_options[] = {
+    {"vector-size", required_argument, 0, 'N'},
+    {"batch-size", required_argument, 0, 'B'}};
 
 int main(int argc, char* argv[]) {
   // Default parameters

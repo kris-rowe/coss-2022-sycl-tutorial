@@ -35,32 +35,31 @@ int main() {
   // Each work-item will compute 4 entries
   constexpr int thread_vector_length{4};
 
-  sycl::event axpy_kernel = sycl_queue.submit([&](sycl::handler& cgh) {
-    cgh.depends_on({copy_x, copy_y});
+  sycl::event axpy_kernel = sycl_queue.parallel_for(
+      {vector_length / thread_vector_length}, {copy_x, copy_y},
+      // Here we need the kernel function to take a sycl::item argument since we
+      // need the range
+      [=](sycl::item<1> work_item) {
+        // These are private to each work-item
+        float x_thread[thread_vector_length];
+        float y_thread[thread_vector_length];
 
-    cgh.parallel_for({vector_length / thread_vector_length},
-                     [=](sycl::item<1> work_item) {
-                       // These are private to each work-item
-                       float x_thread[thread_vector_length];
-                       float y_thread[thread_vector_length];
+        int i = work_item.get_linear_id();
+        int r = work_item.get_range(0);
 
-                       int i = work_item.get_linear_id();
-                       int r = work_item.get_range(0);
+        for (int n{}; n < thread_vector_length; ++n) {
+          x_thread[n] = x[i + r * n];
+          y_thread[n] = y[i + r * n];
+        }
 
-                       for (int n{}; n < thread_vector_length; ++n) {
-                         x_thread[n] = x[i + r * n];
-                         y_thread[n] = y[i + r * n];
-                       }
+        // Since we are calling the function inside a kernel,
+        // it was compiled for the device.
+        axpy(thread_vector_length, alpha, x_thread, y_thread);
 
-                       // Since we are calling the function inside a kernel,
-                       // it was compiled for the device.
-                       axpy(thread_vector_length, alpha, x_thread, y_thread);
-
-                       for (int n{}; n < thread_vector_length; ++n) {
-                         y[i + r * n] = y_thread[n];
-                       }
-                     });
-  });
+        for (int n{}; n < thread_vector_length; ++n) {
+          y[i + r * n] = y_thread[n];
+        }
+      });
 
   sycl_queue.copy(y, y_host.data(), y_host.size(), {axpy_kernel}).wait();
 

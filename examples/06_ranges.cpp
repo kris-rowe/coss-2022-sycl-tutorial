@@ -29,34 +29,23 @@ int main() {
   sycl::event copy_a = sycl_queue.copy(A_host.data(), A, A_host.size());
   sycl::event copy_b = sycl_queue.copy(B_host.data(), B, B_host.size());
 
-  // Define a 2D range for the matrix multiplication kernel
-  // Do block multiplication using 16x16 blocks.
-  sycl::range<2> local_range(16, 16);
-  sycl::range<2> global_range(N, M);
-  sycl::nd_range<2> kernel_range(global_range, local_range);
+  sycl::event gemm_kernel =
+      sycl_queue.parallel_for({N, M}, {copy_a, copy_b}, [=](sycl::id<2> ij) {
+        // In SYCL the last dimension is alays the "fastest"
+        int i = ij[1];
+        int j = ij[0];
 
-  // Submit work to the queue using a kernel defined via lambdas.
-  sycl::event gemm_kernel = sycl_queue.submit([&](sycl::handler& cgh) {
-    cgh.depends_on({copy_a, copy_b});
-    cgh.parallel_for(kernel_range, [=](sycl::nd_item<2> work_item) {
-      // The last dimension of an ND-range is the "fastest"
-      int i = work_item.get_global_id(1);
-      int j = work_item.get_global_id(0);
-
-      // Compute C = A * B
-      // Each work-group will compute a 16x16 block of C
-      float C_ij{};
-      for (int k = 0; k < K; ++k) {
-        C_ij += A[i + M * k] * B[k + K * j];
-      }
-      C[i + M * j] = C_ij;
-    });
-  });
+        // Compute C = A * B
+        float C_ij{};
+        for (int k = 0; k < K; ++k) {
+          C_ij += A[i + M * k] * B[k + K * j];
+        }
+        C[i + M * j] = C_ij;
+      });
 
   // Copy the result from the device to the host; synchronize.
   sycl_queue.copy(C, C_host.data(), C_host.size(), {gemm_kernel}).wait();
 
-  // Verify the results
   // Verify the results.
   for (const auto& C_ij : C_host) {
     if (static_cast<float>(K) != C_ij) {

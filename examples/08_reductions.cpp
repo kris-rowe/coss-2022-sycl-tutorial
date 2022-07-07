@@ -24,25 +24,20 @@ int main() {
   sycl::event copy_x = sycl_queue.copy(x_host.data(), x, x_host.size());
   sycl::event copy_y = sycl_queue.copy(y_host.data(), y, y_host.size());
 
-  // For portability, find the maximum work-group size of the device.
-  const int work_group_size = 256;
-  // The global range must be divisible by the work-group size.
-  // Compute the ceiling function to determine an appropriate range.
-  const int work_group_count =
-      (vector_length + work_group_size - 1) / work_group_size;
+  size_t group_size = 256;
+  size_t group_count = 1 + (vector_length - 1) / group_size;
+  sycl::range<1> local_range(256);
+  sycl::range<1> global_range(group_count * group_size);
+  sycl::nd_range kernel_range(global_range, local_range);
 
-  sycl::range<1> global_range(work_group_size * work_group_count);
-  sycl::range<1> local_range(work_group_size);
-  sycl::nd_range<1> kernel_range(global_range, local_range);
-
-  // Submit work to the queue using a kernel defined via lambdas.
+  // Currently it is not possible to use the queue::parallel_for shortcuts when
+  // passing dependent events and reductions
   sycl::event dotp_kernel = sycl_queue.submit([&](sycl::handler& cgh) {
     cgh.depends_on({copy_x, copy_y});
     auto reduce_xdoty = sycl::reduction(xdoty, sycl::plus<>());
-
     cgh.parallel_for(kernel_range, reduce_xdoty,
-                     [=](auto work_item, auto& xdoty_) {
-                       int i = work_item.get_global_linear_id();
+                     [=](sycl::nd_item<1> work_item, auto& xdoty_) {
+                       auto i = work_item.get_global_id();
                        if (i < vector_length) xdoty_ += x[i] * y[i];
                      });
   });

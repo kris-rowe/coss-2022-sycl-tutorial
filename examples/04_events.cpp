@@ -28,14 +28,11 @@ int main() {
   sycl::event copy_c = sycl_queue.copy(c_host.data(), c, c_host.size());
 
   // Submit work to the queue using a kernel defined via lambdas.
-  sycl::event triad_kernel = sycl_queue.submit([&](sycl::handler& cgh) {
-    // Use events returned from previous copies to express data dependencies.
-    cgh.depends_on({copy_b, copy_c});
-    cgh.parallel_for({vector_length}, [=](sycl::item<1> work_item) {
-      int i = work_item.get_linear_id();
-      a[i] = b[i] + s * c[i];
-    });
-  });
+  sycl::event triad_kernel = sycl_queue.parallel_for(
+      {vector_length},
+      {copy_b, copy_c},  // Use events returned from previous copies to express
+                         // data dependencies.
+      [=](sycl::id<1> i) { a[i] = b[i] + s * c[i]; });
 
   // Copy from the device to the host. Use the event returned from submitting
   // the kernel to ensure this work is completed first.

@@ -29,12 +29,8 @@ int main() {
   sycl_queue.wait();
 
   // Submit work to the queue using a kernel defined via lambdas; synchronize.
-  sycl_queue.submit([&](sycl::handler& cgh) {
-    cgh.parallel_for({vector_length}, [=](sycl::item<1> work_item) {
-      int i = work_item.get_linear_id();
-      a[i] = b[i] + s * c[i];
-    });
-  });
+  sycl_queue.parallel_for({vector_length},
+                          [=](sycl::id<1> i) { a[i] = b[i] + s * c[i]; });
   sycl_queue.wait();
 
   // Copy from the device to the host; synchronize.

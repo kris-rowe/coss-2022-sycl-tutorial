@@ -44,26 +44,25 @@ int main() {
   sycl::range<2> global_range(number_of_elements, nodes_per_element);
   sycl::nd_range<2> kernel_range(global_range, local_range);
 
-  sycl::event boundary_kernel = sycl_queue.submit([&](sycl::handler& cgh) {
-    cgh.depends_on({copy_u});
-    cgh.parallel_for(kernel_range, [=](sycl::nd_item<2> work_item) {
-      int e = work_item.get_global_id(0);
-      int ij = work_item.get_local_id(1);
+  sycl::event boundary_kernel = sycl_queue.parallel_for(
+      kernel_range, {copy_u}, [=](sycl::nd_item<2> work_item) {
+        int e = work_item.get_global_id(0);
+        int ij = work_item.get_local_id(1);
 
-      int i = ij % number_of_nodes;
-      int j = ij / number_of_nodes;
-      int on_boundary = (i == 0) || (i == (number_of_nodes - 1)) || (j == 0) ||
-                        (j == (number_of_nodes - 1));
+        int i = ij % number_of_nodes;
+        int j = ij / number_of_nodes;
+        int on_boundary = (i == 0) || (i == (number_of_nodes - 1)) ||
+                          (j == 0) || (j == (number_of_nodes - 1));
 
-      auto wg = work_item.get_group();
+        auto wg = work_item.get_group();
 
-      // Find the offset to the next boundary point within the group
-      int b = sycl::exclusive_scan_over_group(wg, on_boundary, sycl::plus<>());
-      if (on_boundary) {
-        ub[b + boundary_per_element * e] = u[ij + nodes_per_element * e];
-      }
-    });
-  });
+        // Find the offset to the next boundary point within the group
+        int b =
+            sycl::exclusive_scan_over_group(wg, on_boundary, sycl::plus<>());
+        if (on_boundary) {
+          ub[b + boundary_per_element * e] = u[ij + nodes_per_element * e];
+        }
+      });
 
   // Copy the result from the device to the host; synchronize.
   sycl_queue.copy(ub, ub_host.data(), total_boundary, {boundary_kernel}).wait();

@@ -6,7 +6,7 @@
 
 #include "CL/sycl.hpp"
 
-// Given a group of vectors of the same length, compute 
+// Given a group of vectors of the same length, compute
 // for (b=0; b < batch_size; ++b) {
 //   Y += alpha * X + Y
 // }
@@ -26,25 +26,20 @@ sycl::event axpy_batch(sycl::queue& queue, int64_t N, T alpha, const T* x,
     throw std::logic_error("N is smaller than batch_size * stride_y");
   }
 
-  // Correct this. Remember, the last dimension is the "fastest".
-  sycl::range<2> global_range(1, 1);
+  sycl::event kernel_event = queue.parallel_for(
+      {1, 1},  // Correct this. Remember, the last dimension is the "fastest".
+      dependencies, [=](sycl::id<2> index) {
+        // Find the batch index, and the index within the current vector
+        // int batch_i = ???;
+        // int i = ???;
 
-  sycl::event kernel_event = queue.submit([&](sycl::handler& cgh) {
-    cgh.depends_on(dependencies);
+        // Create pointers to the start of each vector for this axpy.
+        // const T* batch_x = x + ???;
+        // T* batch_y = y + ???;
 
-    cgh.parallel_for(global_range, [=](sycl::item<2> work_item) {
-      // Find the batch index, and the index within the current vector
-      // int batch_i = ???;
-      // int i = ???;
-
-      // Create pointers to the start of each vector for this axpy.
-      // const T* batch_x = x + ???;
-      // T* batch_y = y + ???;
-
-      // Calculate axpy for the current vectors.
-      // batch_y[i] += alpha * batch_x[i];
-    });
-  });
+        // Calculate axpy for the current vectors.
+        // batch_y[i] += alpha * batch_x[i];
+      });
 
   return kernel_event;
 }
